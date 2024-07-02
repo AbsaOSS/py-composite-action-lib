@@ -1,0 +1,65 @@
+name: Build and Test
+on:
+  pull_request:
+    branches:
+      - '**'
+    types: [ opened, synchronize, reopened ]
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Python dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install -r requirements.txt
+        shell: bash
+
+      - name: Call command python3
+        run: python3 --version
+        shell: bash
+
+      - name: Set PYTHONPATH environment variable
+        run: echo "PYTHONPATH=${GITHUB_WORKSPACE}/src" >> $GITHUB_ENV
+        shell: bash
+
+      - name: print PYTHONPATH env variable
+        run: echo $PYTHONPATH
+        shell: bash
+
+      - name: Build and run unit tests
+        run: pytest --cov=src --cov-report html tests/ -vv
+
+      - name: Check overall coverage
+        run: |
+          coverage report --fail-under=80
+          coverage xml -o coverage_overall.xml
+        shell: bash
+
+      - name: Check changed files coverage
+        run: |
+          # Get the list of changed Python files
+          CHANGED_FILES=$(git diff --name-only --diff-filter=AMR ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep '.py$')
+          echo "Changed Python files: $CHANGED_FILES"
+
+          # Convert list to comma-delimited string
+          CHANGED_FILES=$(echo "$CHANGED_FILES" | awk '{printf "%s,", $0} END {print ""}' | sed 's/,$//')
+          
+          # Generate coverage report for changed files
+          CHANGED_FILES_REPORT=$(coverage report --include="$CHANGED_FILES")
+          echo "Changed Python files: $CHANGED_FILES_REPORT"
+
+          # Fail if the coverage for changed files is below threshold
+          coverage report --include="$CHANGED_FILES" | grep TOTAL | awk '{if ($4 < 80.0) exit 1}'
+        shell: bash
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: coverage_overall.xml
