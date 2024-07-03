@@ -1,0 +1,67 @@
+name: Lint Code with Pylint
+
+on:
+  pull_request:
+    branches:
+      - '**'
+    types: [ opened, synchronize, reopened ]
+
+jobs:
+  lint:
+    name: Lint Code
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip          
+          pip install pylint
+
+      - name: Run pylint on entire project
+        id: pylint_project
+        run: |
+          pylint ./src > pylint_report.txt || true
+          pylint_score=$(pylint --exit-zero .src | tail -n 2 | grep -oE '[0-9]+\.[0-9]+/10' | head -n 1 | cut -d '/' -f 1)
+          echo "Pylint score: $pylint_score"
+          echo "::set-output name=score::$pylint_score"
+          if (( $(echo "$pylint_score < 8.0" | bc -l) )); then
+            echo "Pylint score is below 8.0"
+            exit 1
+          fi
+
+      - name: Get list of modified Python files
+        id: modified_files
+        run: |
+          echo "::set-output name=files::$(git diff --name-only ${{ github.sha }} | grep '.py$' | tr '\n' ' ')"
+
+      - name: Run pylint on modified files
+        if: steps.modified_files.outputs.files != ''
+        id: pylint_modified
+        run: |
+          pylint ${{ steps.modified_files.outputs.files }} > pylint_modified_report.txt || true
+          pylint_score=$(pylint --exit-zero ${{ steps.modified_files.outputs.files }} | tail -n 2 | grep -oE '[0-9]+\.[0-9]+/10' | head -n 1 | cut -d '/' -f 1)
+          echo "Pylint score for modified files: $pylint_score"
+          echo "::set-output name=score::$pylint_score"
+          if (( $(echo "$pylint_score < 8.0" | bc -l) )); then
+            echo "Pylint score for modified files is below 8.0"
+            exit 1
+          fi
+
+      - name: Upload pylint report
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: pylint-report
+          path: |
+            pylint_report.txt
+            pylint_modified_report.txt

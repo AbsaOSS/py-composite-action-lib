@@ -8,6 +8,7 @@
 - [Features](#features)
 - [How to Use Local Version of Library for Development](#how-to-use-local-version-of-library-for-development)
 - [How to Run Tests](#how-to-run-tests)
+- [How to Run Code Check](#how-to-run-code-check)
 - [How to Release](#how-to-release)
 - [Contribution Guidelines](#contribution-guidelines)
 - [License Information](#license-information)
@@ -94,14 +95,30 @@ To run tests for PyCompositeActionLib, use the following commands:
 ```bash
 pip install -r requirements-test.txt
 ```
-- [A] Run the tests using pytest:
+- [A] Run the tests using pytest (from project root):
 ```bash
+export PYTHONPATH={path-to-your-project}/py-composite-action-lib/src
 pytest
 ```
 - [B] Run the tests using pytest with code coverage
 ```bash
 pytest --cov=src --cov-report html tests/ -vv
 ```
+
+## How to run code check
+- Install pylint
+```bash
+pip install pylint
+```
+- Configure pylint
+```bash
+pylint --generate-rcfile > .pylintrc
+```
+- Run pylint
+```bash
+pylint ./py-composite-action-lib/src
+```
+
 
 ## How to release
 ### Update `setup.py`
