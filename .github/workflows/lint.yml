@@ -61,7 +61,7 @@ jobs:
           echo "Modified Python files: $modified_files"
 
       - name: Run pylint on modified files
-        if: steps.modified_files.outputs.files != ''
+        if: env.files != ''
         id: pylint_modified
         run: |
           pylint ${{ steps.modified_files.outputs.files }} > pylint_modified_report.txt || true
