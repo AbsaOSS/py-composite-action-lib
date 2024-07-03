@@ -6,6 +6,9 @@ on:
       - '**'
     types: [ opened, synchronize, reopened ]
 
+env:
+  PYLINT_THRESHOLD: 8.0
+
 jobs:
   lint:
     name: Lint Code
@@ -44,8 +47,8 @@ jobs:
           pylint_score=$(pylint --exit-zero ./src | tail -n 2 | grep -oE '[0-9]+\.[0-9]+/10' | head -n 1 | cut -d '/' -f 1)
           echo "Pylint score calculated: $pylint_score"
           
-          if (( $(echo "$pylint_score < 8.0" | bc -l) )); then
-            echo "Pylint score is below 8.0: $pylint_score"
+          if (( $(echo "$pylint_score < ${{ env.PYLINT_THRESHOLD }}" | bc -l) )); then
+            echo "Pylint score is below ${{ env.PYLINT_THRESHOLD }}: $pylint_score"
             exit 1
           else
             echo "Pylint score is acceptable: $pylint_score"
