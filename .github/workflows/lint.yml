@@ -55,7 +55,8 @@ jobs:
         id: modified_files
         run: |
           echo "Fetching modified Python files..."
-          modified_files=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep '.py$' | tr '\n' ' ')
+          modified_files=$(git diff --name-only --diff-filter=AMR ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep '.py$')
+          modified_files=$(echo "$$modified_files" | awk '{printf "%s,", $0} END {print ""}' | sed 's/,$//')          
           echo "files=$modified_files" >> $GITHUB_ENV
           echo "Modified Python files: $modified_files"
 
