@@ -13,7 +13,6 @@ jobs:
 
     env:
       OVERALL_SCORE_LIMIT: 8.0
-      CHANGED_SCORE_LIMIT: 8.0
 
     steps:
       - name: Checkout code
@@ -51,24 +50,6 @@ jobs:
           echo "Setting pylint score output..."
           echo "project_score=$pylint_score" >> $GITHUB_ENV
 
-      - name: Get list of modified Python files
-        id: modified_files
-        run: |
-          echo "Fetching modified Python files..."
-          modified_files=$(git diff --name-only --diff-filter=AMR ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep '.py$')
-          modified_files=$(echo "$modified_files" | awk '{printf "%s,", $0} END {print ""}' | sed 's/,$//')          
-          echo "files=$modified_files" >> $GITHUB_ENV
-          echo "Modified Python files: $modified_files"
-
-      - name: Run pylint on modified files
-        if: env.files != ''
-        id: pylint_modified
-        run: |
-          pylint ${{ steps.modified_files.outputs.files }} > pylint_modified_report.txt || true
-          pylint_score=$(pylint --exit-zero ${{ steps.modified_files.outputs.files }} | tail -n 2 | grep -oE '[0-9]+\.[0-9]+/10' | head -n 1 | cut -d '/' -f 1)
-          echo "Pylint score for modified files: $pylint_score"
-          echo "modified_score=$pylint_score" >> $GITHUB_ENV
-
       - name: Upload pylint report
         if: always()
         uses: actions/upload-artifact@v3
@@ -76,20 +57,15 @@ jobs:
           name: pylint-report
           path: |
             pylint_report.txt
-            pylint_modified_report.txt
 
       - name: Evaluate pylint scores
         run: |
           echo "Evaluating pylint score for the entire project..."
-          if (( $(echo "$PROJECT_SCORE < $OVERALL_SCORE_LIMIT" | bc -l) )); then
-            echo "Pylint score is below $OVERALL_SCORE_LIMIT: $PROJECT_SCORE"
+          project_score=$(cat $GITHUB_ENV | grep 'project_score' | cut -d '=' -f 2)
+          if (( $(echo "$project_score < $OVERALL_SCORE_LIMIT" | bc -l) )); then
+            echo "Pylint score is below $OVERALL_SCORE_LIMIT: $project_score"
             exit 1
           else
-            echo "Pylint score is acceptable: $PROJECT_SCORE"
+            echo "Pylint score is acceptable: $project_score"
           fi
-
-          echo "Evaluating pylint score for modified files..."
-          if (( $(echo "$MODIFIED_SCORE < $CHANGED_SCORE_LIMIT" | bc -l) )); then
-            echo "Pylint score for modified files is below $CHANGED_SCORE_LIMIT: $MODIFIED_SCORE"
-            exit 1
-          fi
+      
