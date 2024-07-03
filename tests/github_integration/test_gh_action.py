@@ -29,7 +29,7 @@ def test_get_input_without_hyphen(mock_getenv):
 def test_set_output_default(mock_open, mock_getenv):
     mock_getenv.return_value = 'default_output.txt'
     set_action_output('test-output', 'test_value')
-    mock_open.assert_called_with('default_output.txt', 'a')
+    mock_open.assert_called_with('default_output.txt', 'a', encoding='utf-8')
     handle = mock_open()
     handle.write.assert_any_call('test-output<<EOF\n')
     handle.write.assert_any_call('test_value')
@@ -41,7 +41,7 @@ def test_set_output_default(mock_open, mock_getenv):
 def test_set_output_custom_path(mock_open, mock_getenv):
     mock_getenv.return_value = 'custom_output.txt'
     set_action_output('custom-output', 'custom_value', 'default_output.txt')
-    mock_open.assert_called_with('custom_output.txt', 'a')
+    mock_open.assert_called_with('custom_output.txt', 'a', encoding='utf-8')
     handle = mock_open()
     handle.write.assert_any_call('custom-output<<EOF\n')
     handle.write.assert_any_call('custom_value')

@@ -1,4 +1,10 @@
-from typing import Optional
+"""
+This module defines the Commit class, which represents a commit in GitHub. It encapsulates the data and operations
+related to a GitHub commit, such as retrieving commit details (SHA, message, author). The Commit class provides a
+structured way to access commit information, making it easier to integrate GitHub commit data into applications or
+scripts that require detailed commit information. This module is part of a larger system designed to interact with
+GitHub, focusing on commit management within the context of GitHub integration.
+"""
 
 from github import Commit as GitCommit
 

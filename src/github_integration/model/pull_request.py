@@ -1,3 +1,12 @@
+"""
+This module defines the PullRequest class, which represents a pull request in GitHub. It encapsulates the data and
+operations related to a GitHub pull request, such as retrieving pull request details (ID, number, title, body, state,
+creation, update, close, and merge dates), managing labels, and identifying mentions of issues within the pull request
+body. Additionally, it provides functionality to check if a pull request is merged or closed, get the author and
+contributors (planned for future implementation), and manage associated commits. This module is part of a larger
+system designed to interact with GitHub, focusing on pull request management within the context of GitHub integration.
+"""
+
 import re
 from datetime import datetime
 from typing import Optional

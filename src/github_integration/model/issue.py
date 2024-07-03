@@ -1,3 +1,12 @@
+"""
+This module defines the Issue class, which represents an issue in GitHub. It encapsulates the data and operations
+related to a GitHub issue, such as retrieving issue details (ID, number, title, body, state, labels, creation date),
+managing labels, and identifying authors and contributors (planned for future implementation). Additionally, it
+provides functionality to check if an issue is closed and to get the reason for the issue's state. This module is
+part of a larger system designed to interact with GitHub, focusing on issue management within the context of GitHub
+integration.
+"""
+
 from datetime import datetime
 from typing import Optional
 

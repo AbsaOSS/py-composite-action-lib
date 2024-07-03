@@ -1,3 +1,12 @@
+"""
+This module encapsulates functionalities for interacting with GitHub via the GitHub API. It provides a
+set of features for managing GitHub data, including repositories, releases, issues, pull requests, and commits. The
+GithubManager class, designed as a singleton, serves as the central point for all GitHub operations, ensuring efficient
+and consistent access to the GitHub API. It also includes utilities for rate limit management and generating URLs for
+change logs. This module is intended for applications that require direct interaction with GitHub data, offering both
+fetch and store capabilities to streamline GitHub data management.
+"""
+
 import logging
 import time
 
@@ -30,15 +39,16 @@ def singleton(cls):
 
 @singleton
 class GithubManager:
-    RATE_LIMIT_THRESHOLD_PERCENTAGE = 10  # Start sleeping logic when less than 10% of rate limit remains
-
     """
     A singleton class used to manage GitHub interactions.
 
-    This class provides methods to fetch various GitHub objects such as repositories, releases, issues, pull requests, and commits. 
-    It maintains a persistent state for the GitHub connection, repository, and latest release information. Additionally, it offers 
-    static methods to output fetched data using the same methods without requiring an instance.
+    This class provides methods to fetch various GitHub objects such as repositories, releases, issues, pull requests,
+    and commits.
+    It maintains a persistent state for the GitHub connection, repository, and latest release information. Additionally,
+    it offers static methods to output fetched data using the same methods without requiring an instance.
     """
+
+    RATE_LIMIT_THRESHOLD_PERCENTAGE = 10  # Start sleeping logic when less than 10% of rate limit remains
 
     def __init__(self):
         self.__g = None
@@ -46,6 +56,16 @@ class GithubManager:
         self.__git_release = None
 
     def reset(self) -> 'GithubManager':
+        """
+        Resets the GithubManager instance to its initial state.
+
+        This method clears the current GitHub connection, repository, and latest release information,
+        effectively resetting the instance to its initial state. This can be useful when needing to
+        refresh the instance's state or switch to a different GitHub repository context.
+
+        Returns:
+            GithubManager: The instance itself after being reset, allowing for method chaining.
+        """
         self.__g = None
         self.__repository = None
         self.__git_release = None
@@ -124,13 +144,13 @@ class GithubManager:
         :return: The fetched Repository object, or None if the repository could not be fetched.
         """
         try:
-            logging.info(f"Fetching repository: {repository_id}")
+            logging.info("Fetching repository: %s", repository_id)
             return self.__g.get_repo(repository_id)
         except Exception as e:
             if "Not Found" in str(e):
-                logging.error(f"Repository not found: {repository_id}")
+                logging.error("Repository not found: %s", repository_id)
             else:
-                logging.error(f"Fetching repository failed for {repository_id}: {str(e)}")
+                logging.error("Fetching repository failed for %s: %s", repository_id, str(e))
 
         return None
 
@@ -148,18 +168,17 @@ class GithubManager:
         repo = repository or self.__repository
 
         try:
-            logging.info(f"Fetching latest release for {repo.full_name}")
+            logging.info("Fetching latest release for %s", repo.full_name)
             release = repo.get_latest_release()
-            logging.debug(
-                f"Found latest release: {release.tag_name}, created at: {release.created_at}, published at: {release.published_at}")
+            logging.debug("Found latest release: %s, created at: %s, published at: %s",
+                          release.tag_name, release.created_at, release.published_at)
             return release
         except Exception as e:
             if "Not Found" in str(e):
-                logging.error(
-                    f"Latest release not found for {repo.full_name}. 1st release for repository!")
+                logging.error("Latest release not found for %s. 1st release for repository!", repo.full_name)
             else:
-                logging.error(
-                    f"Fetching latest release failed for {repo.full_name}: {str(e)}. Expected first release for repository.")
+                logging.error("Fetching latest release failed for %s: %s. Expected first release for repository.",
+                              repo.full_name, str(e))
 
         return None
 
@@ -178,12 +197,12 @@ class GithubManager:
         repo = repository or self.__repository
 
         try:
-            logging.info(f"Fetching issue number: {issue_number}")
+            logging.info("Fetching issue number: %s", issue_number)
             issue = repo.get_issue(issue_number)
-            logging.debug(f"Fetched issue: {issue.title}")
+            logging.debug("Fetched issue: %s", issue.title)
             return Issue(issue)
         except Exception as e:
-            logging.error(f"Fetching issue failed for issue number {issue_number}: {str(e)}")
+            logging.error("Fetching issue failed for issue number %s: %s", issue_number, str(e))
             return None
 
     def fetch_issues(self, since: Optional[datetime] = None, state: Optional[str] = None,
@@ -206,13 +225,13 @@ class GithubManager:
             since = self.__get_since()
 
         try:
-            logging.info(f"Fetching all issues for {repo.full_name} since {since}")
+            logging.info("Fetching all issues for %s since %s", repo.full_name, since)
             issues = repo.get_issues(state=state or "all", since=since)
             parsed_issues = [Issue(issue) for issue in issues]
-            logging.info(f"Found {len(parsed_issues)} issues for {repo.full_name}")
+            logging.info("Found %s issues for %s", len(parsed_issues), repo.full_name)
             return parsed_issues
         except Exception as e:
-            logging.error(f"Fetching issues failed: {str(e)}")
+            logging.error("Fetching issues failed: %s", str(e))
             return []
 
     def fetch_pull_requests(self, since: datetime = None, repository: Repository = None) -> list[PullRequest]:
@@ -229,11 +248,11 @@ class GithubManager:
 
         repo = repository or self.__repository
 
-        logging.info(f"Fetching all closed PRs for {repo.full_name}")
+        logging.info("Fetching all closed PRs for %s", repo.full_name)
         pulls = repo.get_pulls(state="closed")
 
         pull_requests = []
-        logging.info(f"Found {len(list(pulls))} PRs for {repo.full_name}")
+        logging.info("Found %s PRs for %s", len(list(pulls)), repo.full_name)
         for pull in list(pulls):
             pull_requests.append(PullRequest(pull))
 
@@ -253,16 +272,13 @@ class GithubManager:
 
         repo = repository or self.__repository
 
-        logging.info(f"Fetching all commits {repo.full_name}")
+        logging.info("Fetching all commits %s", repo.full_name)
         raw_commits = repo.get_commits()
 
         commits = []
         for raw_commit in raw_commits:
             # Note: kept for near future development
-            # for reference commit author - use raw_commit.author
-            # logging.debug(f"Raw Commit: {raw_commit}, Author: {raw_commit.author}, Commiter: {raw_commit.committer}.")
-            # logging.debug(f"Raw Commit.commit: Message: {raw_commit.commit.message}, Author: {raw_commit.commit.author}, Commiter: {raw_commit.commit.committer}.")
-
+            #   - for reference commit author - use raw_commit.author
             commits.append(Commit(raw_commit))
 
         return commits
@@ -270,6 +286,14 @@ class GithubManager:
     # get methods
 
     def get_change_url(self, tag_name: str, repository: Repository = None, git_release: GitRelease = None) -> str:
+        """
+        Generates a URL for viewing changes associated with a given tag name in a GitHub repository.
+
+        :param tag_name: The tag name for which the change URL is to be generated.
+        :param repository: An optional Repository. If given, this repository is used instead current one.
+        :param git_release: An Optional GitRelease. If given, URL compares this release with the tag name.
+        :return: A string containing the URL to view the changes. Returns an empty string if the repository is not set.
+        """
         if not repository and not self.__repository:
             logging.error("Get change url failed. Repository is not set.")
             return ""
@@ -315,19 +339,19 @@ class GithubManager:
             if rate_limit.core.remaining < threshold:
                 reset_time = rate_limit.core.reset
                 sleep_time = (reset_time - datetime.utcnow()).total_seconds() + 10
-                logging.debug(f"Rate limit reached. Sleeping for {sleep_time} seconds.")
+                logging.debug("Rate limit reached. Sleeping for %s seconds.", sleep_time)
                 time.sleep(sleep_time)
             else:
-                logging.debug(f"Rate limit: {rate_limit.core.remaining} remaining of {rate_limit.core.limit}")
+                logging.debug("Rate limit: %s remaining of %s", rate_limit.core.remaining, rate_limit.core.limit)
         except Exception as e:
-            logging.error(f"Failed to get rate limit: {str(e)}")
+            logging.error("Failed to get rate limit: %s", str(e))
 
     def __get_since(self, repository: Repository = None, git_release: GitRelease = None) -> Optional[datetime]:
         """
         Gets the 'since' datetime for fetching issues, pull requests, and commits.
 
-        :param repository: The repository to use for determining the 'since' datetime. Defaults to the current repository.
-        :param git_release: The GitRelease to use for determining the 'since' datetime. Defaults to the current git release.
+        :param repository: The repository to use for determining the 'since' datetime. Default use current repository.
+        :param git_release: The GitRelease to use for determining the 'since' datetime. Default use current git release.
         :return: The 'since' datetime, or None if it is not set.
         """
         if not repository and not self.__repository:

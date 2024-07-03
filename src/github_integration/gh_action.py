@@ -1,3 +1,12 @@
+"""
+This module provides utilities for GitHub Actions, including functions to retrieve action inputs,
+set action outputs, and mark actions as failed. It is designed to facilitate the interaction
+between Python scripts and the GitHub Actions environment by abstracting common tasks into
+simple function calls. This includes reading input parameters passed to the action, writing
+outputs that can be used by subsequent steps in a workflow, and handling error reporting in
+a way that integrates with GitHub's action runner system.
+"""
+
 import os
 import sys
 
@@ -34,10 +43,10 @@ def set_action_output(name: str, value: str, default_output_path: str = "default
         written if the 'GITHUB_OUTPUT' environment variable is not set. Defaults to "default_output.txt".
     """
     output_file = os.getenv('GITHUB_OUTPUT', default_output_path)
-    with open(output_file, 'a') as f:
+    with open(output_file, 'a', encoding="utf-8") as f:
         f.write(f"{name}<<EOF\n")
         f.write(f"{value}")
-        f.write(f"EOF\n")
+        f.write("EOF\n")
 
 
 def set_action_failed(message: str):

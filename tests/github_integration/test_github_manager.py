@@ -103,7 +103,7 @@ def test_fetch_repository_not_found(logging_mock):
     result = GithubManager().fetch_repository(repository_id)
 
     assert result is None
-    logging_mock.error.assert_called_with(f"Repository not found: {repository_id}")
+    logging_mock.error.assert_called_with("Repository not found: %s", repository_id)
 
 
 @patch('github_integration.github_manager.logging')
@@ -116,7 +116,7 @@ def test_fetch_repository_exception(logging_mock):
     result = GithubManager().fetch_repository(repository_id)
 
     assert result is None
-    logging_mock.error.assert_called_with(f"Fetching repository failed for {repository_id}: Unexpected error")
+    logging_mock.error.assert_called_with("Fetching repository failed for %s: %s", repository_id, "Unexpected error")
 
 
 # GithubManager.fetch_latest_release
@@ -152,7 +152,7 @@ def test_fetch_latest_release_not_found(logging_mock):
     result = GithubManager().fetch_latest_release()
 
     assert result is None
-    logging_mock.error.assert_called_with(f"Latest release not found for {repository_mock.full_name}. 1st release for repository!")
+    logging_mock.error.assert_called_with("Latest release not found for %s. 1st release for repository!", repository_mock.full_name)
 
 
 @patch('github_integration.github_manager.logging')
@@ -167,7 +167,8 @@ def test_fetch_latest_release_exception(logging_mock):
     result = GithubManager().fetch_latest_release()
 
     assert result is None
-    logging_mock.error.assert_called_with(f"Fetching latest release failed for owner/test: Unexpected error. Expected first release for repository.")
+    logging_mock.error.assert_called_with(f"Fetching latest release failed for %s: %s. Expected first release for repository.",
+                                          "owner/test", "Unexpected error")
 
 
 # GithubManager.fetch_issue
@@ -392,7 +393,8 @@ def test_show_rate_limit_threshold_not_reached(logging_mock):
 
     GithubManager().show_rate_limit()
 
-    logging_mock.debug.assert_called_with(f"Rate limit: {rate_limit_mock.core.remaining} remaining of {rate_limit_mock.core.limit}")
+    logging_mock.debug.assert_called_with(f"Rate limit: %s remaining of %s", rate_limit_mock.core.remaining,
+                                          rate_limit_mock.core.limit)
 
 
 @patch('github_integration.github_manager.logging')
@@ -413,7 +415,7 @@ def test_show_rate_limit_threshold_reached(datetime_mock, time_sleep_mock, loggi
 
     GithubManager().show_rate_limit()
 
-    logging_mock.debug.assert_called_with(f"Rate limit reached. Sleeping for {70.0} seconds.")
+    logging_mock.debug.assert_called_with("Rate limit reached. Sleeping for %s seconds.", 70.0)
     time_sleep_mock.assert_called_with(70.0)
 
 
