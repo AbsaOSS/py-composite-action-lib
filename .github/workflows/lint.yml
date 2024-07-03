@@ -45,7 +45,7 @@ jobs:
           echo "Pylint score calculated: $pylint_score"
           
           echo "Setting pylint score output..."
-          echo "::set-output name=score::$pylint_score"
+          echo "score=$pylint_score" >> $GITHUB_OUTPUT
           
           echo "Checking if pylint score is below threshold..."
           if (( $(echo "$pylint_score < 8.0" | bc -l) )); then
