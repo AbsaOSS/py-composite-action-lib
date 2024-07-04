@@ -64,19 +64,3 @@ jobs:
           else
             echo "Pylint score is acceptable: $pylint_score"
           fi
-
-#      - name: Run pylint on entire project
-#        id: pylint_project
-#        run: |
-#          echo "Starting pylint check on ./src"
-#          pylint ./src > pylint_report.txt || true
-#
-#          pylint_score=$(pylint --exit-zero ./src | tail -n 2 | grep -oE '[0-9]+\.[0-9]+/10' | head -n 1 | cut -d '/' -f 1)
-#          echo "Pylint score calculated: $pylint_score"
-#
-#          if (( $(echo "$pylint_score < ${{ env.PYLINT_THRESHOLD }}" | bc -l) )); then
-#            echo "Pylint score is below ${{ env.PYLINT_THRESHOLD }}: $pylint_score"
-#            exit 1
-#          else
-#            echo "Pylint score is acceptable: $pylint_score"
-#          fi
