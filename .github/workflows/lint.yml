@@ -30,6 +30,14 @@ jobs:
           python3 -m pip install --upgrade pip          
           pip install pylint
 
+      - name: Set PYTHONPATH environment variable
+        run: echo "PYTHONPATH=${GITHUB_WORKSPACE}/src" >> $GITHUB_ENV
+        shell: bash
+
+      - name: print PYTHONPATH env variable
+        run: echo $PYTHONPATH
+        shell: bash
+
       - name: Run pylint on entire project
         id: pylint_project
         run: |
