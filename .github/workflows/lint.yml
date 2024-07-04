@@ -44,6 +44,7 @@ jobs:
           echo "Pylint check completed, report saved to pylint_report.txt"
           
           echo "Calculating pylint score..."
+          pylint ./src
           pylint_score=$(pylint --exit-zero ./src | tail -n 2 | grep -oE '[0-9]+\.[0-9]+/10' | head -n 1 | cut -d '/' -f 1)
           echo "Pylint score calculated: $pylint_score"
           
