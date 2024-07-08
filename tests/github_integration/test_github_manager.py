@@ -491,7 +491,7 @@ def test_fetch_methods():
 
     assert len(issues) > 0
 
-    issue = GithubManager().fetch_issue(issue_number=1)
+    issue = GithubManager().fetch_issue(repository=repo, issue_number=1)
     GithubManager().show_rate_limit()
 
     assert issue is not None
