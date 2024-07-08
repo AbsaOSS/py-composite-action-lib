@@ -320,17 +320,17 @@ class GithubManager:
 
     # others
 
-    def show_rate_limit(self):
+    def show_rate_limit(self) -> 'GithubManager':
         """
         Shows the current rate limit and sleeps if the rate limit is reached.
         """
         if not logging.getLogger().isEnabledFor(logging.DEBUG):
             # save API Call when not in debug mode
-            return
+            return self
 
         if self.__g is None:
             logging.error("Show Rate Limit failed. GitHub object is not set.")
-            return
+            return self
 
         try:
             rate_limit: RateLimit = self.__g.get_rate_limit()

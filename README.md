@@ -74,10 +74,13 @@ else:
 - **Reusable Components**: Write once, reuse across multiple actions to save time and effort.
 
 ## How to install for development
-TODO - need to be tested in following PRs 
 1. To use your library in development mode, you need to install it using the pip tool with the -e option. Navigate to the directory containing your setup.py and run:
 ```bash
+cd path/to/PyCompositeActionLib
 pip install -e .
+
+**Optional**: If you want to install development dependencies (e.g., for testing), you can include them in the installation command:
+pip install -e .[dev]
 ```
 Hint: The -e option stands for "editable," meaning any changes you make to the library code will immediately be reflected in the environment.
 2. Now you can use your library in your other Python projects. For example, in your project directory:
@@ -95,14 +98,36 @@ To run tests for PyCompositeActionLib, use the following commands:
 ```bash
 pip install -r requirements-test.txt
 ```
-- [A] Run the tests using pytest (from project root):
+- Set the PYTHONPATH environment variable to the project root directory:
 ```bash
-export PYTHONPATH={path-to-your-project}/py-composite-action-lib/src
+export PYTHONPATH={path-to-your-project}/py-composite-action-lib
+```
+- See `pytest` configuration in `pytest.ini` file for defined test markers:
+```bash
+[pytest]
+markers =
+    integration: marks integration tests
+```
+### Run all tests using pytest (from project root):
+- Run all tests:
+```bash
 pytest
 ```
-- [B] Run the tests using pytest with code coverage
+- Run all tests with code coverage:
 ```bash
-pytest --cov=src --cov-report html tests/ -vv
+pytest --cov=action --cov=github_integration --cov-report html tests/ -vv
+```
+
+### Run separated unit and integration tests using pytest (from project root):
+Note: unit tests are all tests without the `integration` marker.
+```bash
+pytest -m "not integration"
+pytest -m integration
+```
+- Run selection of tests with code coverage:
+```bash
+pytest --cov=action --cov=github_integration --cov-report html -m "not integration" tests/ -vv
+pytest --cov=action --cov=github_integration --cov-report html -m integration tests/ -vv
 ```
 
 ## How to run code check

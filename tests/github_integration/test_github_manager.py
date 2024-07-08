@@ -1,8 +1,11 @@
+import os
+
 import pytest
 
 from datetime import datetime, timedelta
-from unittest.mock import MagicMock, patch, Mock
+from unittest.mock import patch, Mock
 
+from github import Auth
 from github.GitRelease import GitRelease
 from github.MainClass import Github
 from github.Repository import Repository
@@ -449,6 +452,59 @@ def test_show_rate_limit_failed(logging_mock):
     github_mock.get_rate_limit.side_effect = Exception('Unexpected error')
 
     GithubManager().show_rate_limit()
+
+
+@pytest.mark.integration
+def test_store_methods():
+    auth = Auth.Token(token=os.getenv('GITHUB_TOKEN', ''))
+    GithubManager().reset().github = Github(auth=auth, per_page=100)
+
+    (GithubManager()
+     .store_repository('AbsaOSS/py-composite-action-lib')
+     .show_rate_limit()
+     .store_latest_release()
+     .show_rate_limit())
+
+    assert GithubManager().repository is not None
+    assert "py-composite-action-lib" == GithubManager().get_repository_full_name()
+    assert GithubManager().git_release is None      # valid till 1st lin release
+
+
+@pytest.mark.integration
+def test_fetch_methods():
+    auth = Auth.Token(token=os.getenv('GITHUB_TOKEN', ''))
+    GithubManager().reset().github = Github(auth=auth, per_page=100)
+    GithubManager().show_rate_limit()
+
+    repo = GithubManager().fetch_repository(repository_id="AbsaOSS/py-composite-action-lib")
+    GithubManager().show_rate_limit()
+
+    assert repo is not None
+
+    rls = GithubManager().fetch_latest_release(repository=repo)
+    GithubManager().show_rate_limit()
+
+    assert rls is None      # valid till 1st lin release
+
+    issues = GithubManager().fetch_issues(repository=repo)
+    GithubManager().show_rate_limit()
+
+    assert len(issues) > 0
+
+    issue = GithubManager().fetch_issue(issue_number=1)
+    GithubManager().show_rate_limit()
+
+    assert issue is not None
+
+    pulls = GithubManager().fetch_pull_requests(repository=repo)
+    GithubManager().show_rate_limit()
+
+    assert len(pulls) > 0
+
+    commits = GithubManager().fetch_commits(repository=repo)
+    GithubManager().show_rate_limit()
+
+    assert len(commits) > 0
 
 
 if __name__ == '__main__':

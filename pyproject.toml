@@ -1,0 +1,46 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = ["setuptools>=64", "setuptools_scm>=7"]
+
+[project]
+authors = [{ name = "Miroslav Pojer", email = "miroslav.pojer@absa.africa" }]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Build Tools",
+    "Environment :: Console",
+    "Environment :: Other Environment",
+]
+description = "A Python library for composite actions."
+keywords = ["composite", "action", "github"]
+name = "PyCompositeActionLib"
+readme = "README.md"
+requires-python = ">=3.11"
+version = "0.1.0"
+license = { text = "Apache Software License" }
+
+dependencies = [
+    "PyGithub>=1.59.0",
+]
+
+[project.urls]
+Source = "https://github.com/AbsaOSS/py-composite-action-lib"
+
+[project.optional-dependencies]
+dev = [
+    "pytest==7.4.3",
+    "pytest-cov==5.0.0",
+    "coverage==7.5.2",
+    "pylint==3.2.5",
+]
+
+[tool.setuptools_scm]
+
+[tool.setuptools]
+packages = ["action", "github_integration"]

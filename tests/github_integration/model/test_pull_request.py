@@ -3,7 +3,6 @@ from unittest.mock import Mock
 
 from github_integration.model.pull_request import PullRequest
 
-
 mock_commit1 = Mock()
 mock_commit1.sha = "sha1"
 mock_commit1.message = "Initial commit"

@@ -31,7 +31,7 @@ jobs:
           python3 -m pip install -r requirements.txt
 
       - name: Set PYTHONPATH environment variable
-        run: echo "PYTHONPATH=${GITHUB_WORKSPACE}/src" >> $GITHUB_ENV
+        run: echo "PYTHONPATH=${GITHUB_WORKSPACE}" >> $GITHUB_ENV
         shell: bash
 
       - name: print PYTHONPATH env variable

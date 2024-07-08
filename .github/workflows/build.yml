@@ -32,7 +32,7 @@ jobs:
         shell: bash
 
       - name: Set PYTHONPATH environment variable
-        run: echo "PYTHONPATH=${GITHUB_WORKSPACE}/src" >> $GITHUB_ENV
+        run: echo "PYTHONPATH=${GITHUB_WORKSPACE}" >> $GITHUB_ENV
         shell: bash
 
       - name: print PYTHONPATH env variable
@@ -40,7 +40,7 @@ jobs:
         shell: bash
 
       - name: Build and run unit tests
-        run: pytest --cov=src --cov-report html tests/ -vv
+        run: pytest --cov=action --cov=github_integration --cov-report html tests/ -vv
 
       - name: Check overall coverage
         run: |
