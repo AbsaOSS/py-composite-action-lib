@@ -167,7 +167,7 @@ For more details, see the [LICENSE](https://github.com/AbsaOSS/py-composite-acti
 
 ### Contact or Support Information
 
-If you need help with using or contributing to Generate Release Notes Action, or if you have any questions or feedback, don't hesitate to reach out:
+If you need help with using or contributing to **PyCompositeActionLib**, or if you have any questions or feedback, don't hesitate to reach out:
 
 - **Issue Tracker**: For technical issues or feature requests, use the [GitHub Issues page](https://github.com/AbsaOSS/py-composite-action-lib/issues).
 - **Discussion Forum**: For general questions and discussions, join our [GitHub Discussions forum](https://github.com/AbsaOSS/py-composite-action-lib/discussions).
