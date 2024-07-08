@@ -15,10 +15,14 @@
 
 
 ## Description
-**PyCompositeActionLib** is a Python library that streamlines creating and managing composite GitHub Actions. It offers reusable classes and scripts for controlling action inputs/outputs and accessing the GitHub API. 
+**PyCompositeActionLib** is a Python library that streamlines creating and managing composite GitHub Actions. It offers
+reusable classes and scripts for controlling action inputs/outputs and accessing the GitHub API. 
 
 ## Motivation
-The motivation behind PyCompositeActionLib is to provide developers with a robust set of tools that simplify the creation of composite GitHub Actions. By leveraging reusable components and streamlined API access, this library aims to reduce redundancy, improve efficiency, and enhance the overall development experience for creating complex workflows on GitHub.
+The motivation behind PyCompositeActionLib is to provide developers with a robust set of tools that simplify
+the creation of composite GitHub Actions. By leveraging reusable components and streamlined API access, this library
+aims to reduce redundancy, improve efficiency, and enhance the overall development experience for creating complex
+workflows on GitHub.
 
 ## How to use
 ### Example: Control Action Inputs and Outputs
@@ -74,11 +78,14 @@ else:
 
 ## How to install for development
 TODO - need to be tested in following PRs 
-1. To use your library in development mode, you need to install it using the pip tool with the -e option. Navigate to the directory containing your setup.py and run:
+1. To use your library in development mode, you need to install it using the pip tool with the -e option. 
+Navigate to the directory containing your setup.py and run:
 ```bash
 pip install -e .
 ```
-Hint: The -e option stands for "editable," meaning any changes you make to the library code will immediately be reflected in the environment.
+Hint: The -e option stands for "editable," meaning any changes you make to the library code will immediately
+be reflected in the environment.
+
 2. Now you can use your library in your other Python projects. For example, in your project directory:
 ```python
 from mylibrary.module1 import some_function
@@ -150,24 +157,28 @@ git push origin v0.1.0
 
 ### Contribution Guidelines
 
-We welcome contributions to the PyCompositeActionLib! Whether you're fixing bugs, improving documentation, or proposing new features, your help is appreciated.
+We welcome contributions to the PyCompositeActionLib! Whether you're fixing bugs, improving documentation, or proposing 
+new features, your help is appreciated.
 
 #### How to Contribute
 - **Submit Pull Requests**: Feel free to fork the repository, make changes, and submit a pull request. Please ensure your code adheres to the existing style and all tests pass.
 - **Report Issues**: If you encounter any bugs or issues, please report them via the repository's [Issues page](https://github.com/AbsaOSS/py-composite-action-lib/issues).
 - **Suggest Enhancements**: Have ideas on how to make this action better? Open an issue to suggest enhancements.
 
-Before contributing, please review our [contribution guidelines](https://github.com/AbsaOSS/py-composite-action-lib/blob/master/CONTRIBUTING.md) for more detailed information.
+Before contributing, please review our 
+[contribution guidelines](https://github.com/AbsaOSS/py-composite-action-lib/blob/master/CONTRIBUTING.md) for more detailed information.
 
 ### License Information
 
-This project is licensed under the Apache License 2.0. It is a liberal license that allows you great freedom in using, modifying, and distributing this software, while also providing an express grant of patent rights from contributors to users.
+This project is licensed under the Apache License 2.0. It is a liberal license that allows you great freedom in using, 
+modifying, and distributing this software, while also providing an express grant of patent rights from contributors to users.
 
 For more details, see the [LICENSE](https://github.com/AbsaOSS/py-composite-action-lib/blob/master/LICENSE) file in the repository.
 
 ### Contact or Support Information
 
-If you need help with using or contributing to **PyCompositeActionLib**, or if you have any questions or feedback, don't hesitate to reach out:
+If you need help with using or contributing to **PyCompositeActionLib**, or if you have any questions or feedback, 
+don't hesitate to reach out:
 
 - **Issue Tracker**: For technical issues or feature requests, use the [GitHub Issues page](https://github.com/AbsaOSS/py-composite-action-lib/issues).
 - **Discussion Forum**: For general questions and discussions, join our [GitHub Discussions forum](https://github.com/AbsaOSS/py-composite-action-lib/discussions).
