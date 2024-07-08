@@ -175,6 +175,9 @@ modifying, and distributing this software, while also providing an express grant
 
 For more details, see the [LICENSE](https://github.com/AbsaOSS/py-composite-action-lib/blob/master/LICENSE) file in the repository.
 
+This project includes the [PyGithub](https://github.com/PyGithub/PyGithub) library, which is licensed under the LGPL v3. 
+See the [LICENSE_LGPL.md](https://github.com/AbsaOSS/py-composite-action-lib/blob/master/LICENSE_LGPL.md) file for more details.
+
 ### Contact or Support Information
 
 If you need help with using or contributing to **PyCompositeActionLib**, or if you have any questions or feedback, 
