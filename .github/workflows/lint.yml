@@ -42,7 +42,7 @@ jobs:
         id: pylint_project
         run: |
           echo "Starting pylint check on ./src"
-          pylint ./src > pylint_report.txt || true
+          pylint ./action ./github_integration > pylint_report.txt || true
           
           echo "Pylint report:"
           cat pylint_report.txt

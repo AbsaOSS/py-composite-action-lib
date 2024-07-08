@@ -137,11 +137,12 @@ pip install pylint
 ```
 - Configure pylint
 ```bash
+cd path/to/PyCompositeActionLib
 pylint --generate-rcfile > .pylintrc
 ```
 - Run pylint
 ```bash
-pylint ./py-composite-action-lib/src
+pylint ./action ./github_integration 
 ```
 
 
