@@ -466,7 +466,7 @@ def test_store_methods():
      .show_rate_limit())
 
     assert GithubManager().repository is not None
-    assert "py-composite-action-lib" == GithubManager().get_repository_full_name()
+    assert "AbsaOSS/py-composite-action-lib" == GithubManager().get_repository_full_name()
     assert GithubManager().git_release is None      # valid till 1st lin release
 
 

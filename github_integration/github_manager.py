@@ -222,7 +222,7 @@ class GithubManager:
         repo = repository or self.__repository
 
         if since is None:
-            since = self.__get_since()
+            since = self.__get_since(repo)
 
         try:
             logging.info("Fetching all issues for %s since %s", repo.full_name, since)
