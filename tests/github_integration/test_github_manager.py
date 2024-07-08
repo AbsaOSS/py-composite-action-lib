@@ -491,7 +491,7 @@ def test_fetch_methods():
 
     assert len(issues) > 0
 
-    issue = GithubManager().fetch_issue(repository=repo, issue_number=1)
+    issue = GithubManager().fetch_issue(issue_number=1, repository=repo)
     GithubManager().show_rate_limit()
 
     assert issue is not None
@@ -499,7 +499,7 @@ def test_fetch_methods():
     pulls = GithubManager().fetch_pull_requests(repository=repo)
     GithubManager().show_rate_limit()
 
-    assert len(pulls) > 0
+    assert len(pulls) == 0      # valid now until 1st PR closed
 
     commits = GithubManager().fetch_commits(repository=repo)
     GithubManager().show_rate_limit()

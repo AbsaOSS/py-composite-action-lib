@@ -41,7 +41,7 @@ jobs:
         run: echo $PYTHONPATH
         shell: bash
 
-      - name: Build and run unit tests
+      - name: Build, run all tests, get code coverage
         run: pytest --cov=action --cov=github_integration --cov-report html tests/ -vv
 
       - name: Check overall coverage
