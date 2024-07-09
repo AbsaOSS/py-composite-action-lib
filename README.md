@@ -44,7 +44,7 @@ from github import Github, Auth
 from py_composite_action_lib import GithubManager
 
 # Authenticate to GitHub
-token = 'your_github_token'
+token = os.getenv('GITHUB_TOKEN')
 auth = Auth.Token(token=token)   
 GithubManager().github = Github(auth=auth)
 
